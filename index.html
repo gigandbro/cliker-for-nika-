@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,14 +33,14 @@
         .stats p {
             margin: 10px 0;
         }
-        .upgrades, .rebirth {
+        .upgrades, .rebirth, .image-controls {
             margin-top: 30px;
         }
-        .upgrades h3, .rebirth h3 {
+        .upgrades h3, .rebirth h3, .image-controls h3 {
             margin-bottom: 20px;
             font-size: 1.8rem;
         }
-        .upgrades button, .rebirth button {
+        button {
             width: 100%;
             max-width: 300px;
             background: white;
@@ -51,16 +52,24 @@
             cursor: pointer;
             transition: transform 0.2s ease, background-color 0.3s ease;
         }
-        .upgrades button:hover, .rebirth button:hover {
+        button:hover {
             background-color: #444;
             color: white;
             transform: scale(1.1);
+        }
+        img {
+            display: block;
+            margin: 20px auto;
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 15px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Clicker Game</h1>
+        <img id="clickable-image" src="https://via.placeholder.com/300" alt="Clickable Image" onclick="earnPoints()">
         <div class="stats">
             <p><strong>Points:</strong> <span id="points">0</span></p>
             <p><strong>Points Per Click:</strong> <span id="ppc">1</span></p>
@@ -75,33 +84,40 @@
             <h3>Rebirth</h3>
             <button onclick="rebirth()" id="rebirth-btn" disabled>Rebirth (Cost: <span id="rebirth-cost">1000</span>)</button>
         </div>
+        <div class="image-controls">
+            <h3>Change Image</h3>
+            <input type="text" id="image-url" placeholder="Enter Image URL">
+            <button onclick="changeImage()">Change Texture (Cost: 1000 Points)</button>
+            <button onclick="resetImage()">Reset to Default</button>
+        </div>
     </div>
     <footer>
         <p>Clicker Game &copy; 2025. <a href="https://github.com/gigandbro" target="_blank" style="color: white; text-decoration: underline;">GitHub</a></p>
     </footer>
     <script>
-        // Persistent variables using localStorage
         let points = localStorage.getItem('points') ? parseInt(localStorage.getItem('points')) : 0;
         let pointsPerClick = localStorage.getItem('pointsPerClick') ? parseFloat(localStorage.getItem('pointsPerClick')) : 1;
         let rebirths = localStorage.getItem('rebirths') ? parseInt(localStorage.getItem('rebirths')) : 0;
         let rebirthCost = localStorage.getItem('rebirthCost') ? parseInt(localStorage.getItem('rebirthCost')) : 1000;
         let upgradeCost = localStorage.getItem('upgradeCost') ? parseInt(localStorage.getItem('upgradeCost')) : 10;
+        let imageUrl = localStorage.getItem('imageUrl') || "https://via.placeholder.com/300";
 
         function updateUI() {
-            const rebirthMultiplier = Math.pow(2, rebirths); // Rebirth multiplier doubles per rebirth
+            const rebirthMultiplier = Math.pow(2, rebirths);
             document.getElementById('points').innerText = points;
             document.getElementById('ppc').innerText = (pointsPerClick * rebirthMultiplier).toFixed(2);
             document.getElementById('rebirths').innerText = rebirths;
             document.getElementById('rebirth-multiplier').innerText = `${rebirthMultiplier}x`;
             document.getElementById('rebirth-cost').innerText = rebirthCost;
             document.getElementById('upgrade-cost').innerText = upgradeCost;
+            document.getElementById('clickable-image').src = imageUrl;
             document.getElementById('rebirth-btn').disabled = points < rebirthCost;
-            // Save to localStorage
             localStorage.setItem('points', points);
             localStorage.setItem('pointsPerClick', pointsPerClick);
             localStorage.setItem('rebirths', rebirths);
             localStorage.setItem('rebirthCost', rebirthCost);
             localStorage.setItem('upgradeCost', upgradeCost);
+            localStorage.setItem('imageUrl', imageUrl);
         }
 
         function earnPoints() {
@@ -114,7 +130,7 @@
             if (points >= upgradeCost) {
                 points -= upgradeCost;
                 pointsPerClick += 1;
-                upgradeCost = Math.floor(upgradeCost * 1.5); // Increase upgrade cost
+                upgradeCost = Math.floor(upgradeCost * 1.5);
                 updateUI();
             }
         }
@@ -122,10 +138,26 @@
         function rebirth() {
             if (points >= rebirthCost) {
                 rebirths += 1;
-                points = 0; // Reset points
-                rebirthCost = Math.floor(rebirthCost * 1.5); // Rebirth cost increases
+                points = 0;
+                rebirthCost = Math.floor(rebirthCost * 1.5);
                 updateUI();
             }
+        }
+
+        function changeImage() {
+            if (points >= 1000) {
+                const url = document.getElementById('image-url').value;
+                if (url) {
+                    imageUrl = url;
+                    points -= 1000;
+                    updateUI();
+                }
+            }
+        }
+
+        function resetImage() {
+            imageUrl = "https://via.placeholder.com/300";
+            updateUI();
         }
 
         updateUI();
