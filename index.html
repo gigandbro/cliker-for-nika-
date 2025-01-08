@@ -191,11 +191,10 @@
 
         function updateUI() {
             // Calculate the rebirth multiplier
-            const rebirthMultiplier = (rebirths * 2 + 1); // Starts at 1x and increases by 2x for every rebirth
-            const effectivePointsPerClick = pointsPerClick * rebirthMultiplier;
+            const rebirthMultiplier = 1 + (rebirths * 2); // Multiplier increases by 2x for every rebirth
 
             document.getElementById('points').innerText = points;
-            document.getElementById('ppc').innerText = effectivePointsPerClick.toFixed(2);
+            document.getElementById('ppc').innerText = (pointsPerClick * rebirthMultiplier).toFixed(2);
             document.getElementById('rebirths').innerText = rebirths;
             document.getElementById('rebirth-multiplier').innerText = `${rebirthMultiplier}x`;
             document.getElementById('rebirth-cost').innerText = rebirthCost;
@@ -213,7 +212,7 @@
 
         function earnPoints() {
             // Calculate points with the rebirth multiplier
-            const rebirthMultiplier = (rebirths * 2 + 1);
+            const rebirthMultiplier = 1 + (rebirths * 2);
             points += pointsPerClick * rebirthMultiplier;
             clickSound.currentTime = 0;
             clickSound.play();
@@ -283,3 +282,4 @@
     </script>
 </body>
 </html>
+
