@@ -68,6 +68,7 @@
         .clickable {
             margin: 20px auto;
             max-width: 300px;
+            max-height: 300px;
             cursor: pointer;
             border-radius: 30px;
             animation: bounce 1s infinite;
@@ -183,6 +184,8 @@
         const savedImage = localStorage.getItem('customImage');
         if (savedImage) {
             clickableImage.src = savedImage;
+            clickableImage.style.maxWidth = '300px'; // Ensure resized width
+            clickableImage.style.maxHeight = '300px'; // Ensure resized height
         }
 
         function updateUI() {
@@ -241,8 +244,8 @@
             const newImageURL = prompt('Enter the URL of the new image:');
             if (newImageURL) {
                 clickableImage.src = newImageURL;
-                clickableImage.style.maxWidth = '300px';
-                clickableImage.style.maxHeight = '300px';
+                clickableImage.style.maxWidth = '300px'; // Ensure resized width
+                clickableImage.style.maxHeight = '300px'; // Ensure resized height
                 points -= 1000;
                 localStorage.setItem('customImage', newImageURL); // Save the image URL
                 updateUI();
@@ -251,6 +254,8 @@
 
         function resetTexture() {
             clickableImage.src = defaultImage;
+            clickableImage.style.maxWidth = '300px'; // Reset to standard size
+            clickableImage.style.maxHeight = '300px'; // Reset to standard size
             localStorage.removeItem('customImage'); // Remove the custom image
             updateUI();
         }
