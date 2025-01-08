@@ -123,7 +123,7 @@
 
         <div class="rebirth">
             <h3>Rebirth</h3>
-            <button onclick="rebirth()" id="rebirth-btn" disabled>Rebirth (Requires 1000 Points)</button>
+            <button onclick="rebirth()" id="rebirth-btn" disabled>Rebirth (Cost: <span id="rebirth-cost">1000</span>)</button>
         </div>
 
         <div class="texture-change">
@@ -166,6 +166,7 @@
         let points = localStorage.getItem('points') ? parseInt(localStorage.getItem('points')) : 0;
         let pointsPerClick = localStorage.getItem('pointsPerClick') ? parseInt(localStorage.getItem('pointsPerClick')) : 1;
         let rebirths = localStorage.getItem('rebirths') ? parseInt(localStorage.getItem('rebirths')) : 0;
+        let rebirthCost = localStorage.getItem('rebirthCost') ? parseInt(localStorage.getItem('rebirthCost')) : 1000;
         let upgradeCost = 10;
         let musicPlaying = false;
 
@@ -197,8 +198,9 @@
             document.getElementById('ppc').innerText = effectivePointsPerClick.toFixed(2);
             document.getElementById('rebirths').innerText = rebirths;
             document.getElementById('rebirth-multiplier').innerText = `${rebirthMultiplier}x`;
+            document.getElementById('rebirth-cost').innerText = rebirthCost;
             document.getElementById('upgrade-cost').innerText = upgradeCost;
-            document.getElementById('rebirth-btn').disabled = points < 1000;
+            document.getElementById('rebirth-btn').disabled = points < rebirthCost;
             textureBtn.disabled = points < 1000;
             resetBtn.disabled = !savedImage;
 
@@ -206,6 +208,7 @@
             localStorage.setItem('points', points);
             localStorage.setItem('pointsPerClick', pointsPerClick);
             localStorage.setItem('rebirths', rebirths);
+            localStorage.setItem('rebirthCost', rebirthCost);
         }
 
         function earnPoints() {
@@ -229,11 +232,11 @@
         }
 
         function rebirth() {
-            if (points >= 1000) {
+            if (points >= rebirthCost) {
                 points = 0;
                 pointsPerClick = 1;
                 rebirths += 1;
-                upgradeCost = 10;
+                rebirthCost = Math.floor(rebirthCost * 1.5); // Increase the rebirth cost by 1.5x
                 rebirthSound.currentTime = 0;
                 rebirthSound.play();
                 updateUI();
