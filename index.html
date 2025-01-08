@@ -107,7 +107,7 @@
 <body>
     <div class="container">
         <h1>Clicker Game</h1>
-        <img id="clickable-image" class="clickable" src="https://cdn.discordapp.com/attachments/700786927867265145/1326628880403927100/Untitled64_20230625221019.png" alt="Clickable Image" onclick="earnPoints()">
+        <img id="clickable-image" class="clickable" src="https://cdn.discordapp.com/attachments/700786927867265145/1326628880403927100/Untitled64_20230625221019.png?ex=67801eec&is=677ecd6c&hm=a3684c93021d85e06298f98b67892fcaa4362a3f8d34b1bfd8a85db7bfa91cd3&" alt="Clickable Image" onclick="earnPoints()">
         
         <div class="stats">
             <p><strong>Points:</strong> <span id="points">0</span></p>
@@ -163,10 +163,10 @@
     </audio>
 
     <script>
-        let points = 0;
-        let pointsPerClick = 1;
-        let rebirths = 0;
-        let rebirthCost = 1000;
+        let points = localStorage.getItem('points') ? parseInt(localStorage.getItem('points')) : 0;
+        let pointsPerClick = localStorage.getItem('pointsPerClick') ? parseInt(localStorage.getItem('pointsPerClick')) : 1;
+        let rebirths = localStorage.getItem('rebirths') ? parseInt(localStorage.getItem('rebirths')) : 0;
+        let rebirthCost = localStorage.getItem('rebirthCost') ? parseInt(localStorage.getItem('rebirthCost')) : 1000;
         let upgradeCost = 10;
         let musicPlaying = false;
 
@@ -179,10 +179,20 @@
         const textureBtn = document.getElementById('texture-btn');
         const resetBtn = document.getElementById('reset-btn');
 
-        const defaultImage = clickableImage.src;
+        const defaultImage = 'https://cdn.discordapp.com/attachments/700786927867265145/1326628880403927100/Untitled64_20230625221019.png?ex=67801eec&is=677ecd6c&hm=a3684c93021d85e06298f98b67892fcaa4362a3f8d34b1bfd8a85db7bfa91cd3&';
+
+        // Load the custom image from localStorage
+        const savedImage = localStorage.getItem('customImage');
+        if (savedImage) {
+            clickableImage.src = savedImage;
+            clickableImage.style.maxWidth = '300px'; // Ensure resized width
+            clickableImage.style.maxHeight = '300px'; // Ensure resized height
+        }
 
         function updateUI() {
-            const rebirthMultiplier = 1 + (rebirths * 2); 
+            // Calculate the rebirth multiplier
+            const rebirthMultiplier = 1 + (rebirths * 2); // Multiplier increases by 2x for every rebirth
+
             document.getElementById('points').innerText = points;
             document.getElementById('ppc').innerText = (pointsPerClick * rebirthMultiplier).toFixed(2);
             document.getElementById('rebirths').innerText = rebirths;
@@ -191,11 +201,18 @@
             document.getElementById('upgrade-cost').innerText = upgradeCost;
             document.getElementById('rebirth-btn').disabled = points < rebirthCost;
             textureBtn.disabled = points < 1000;
-            resetBtn.disabled = clickableImage.src === defaultImage;
+            resetBtn.disabled = !savedImage;
+
+            // Save the state to localStorage
+            localStorage.setItem('points', points);
+            localStorage.setItem('pointsPerClick', pointsPerClick);
+            localStorage.setItem('rebirths', rebirths);
+            localStorage.setItem('rebirthCost', rebirthCost);
         }
 
         function earnPoints() {
-            const rebirthMultiplier = 1 + (rebirths * 2);
+            // Calculate points with the rebirth multiplier
+            const rebirthMultiplier = 1 + (rebirths * 2); // Apply multiplier
             points += pointsPerClick * rebirthMultiplier;
             clickSound.currentTime = 0;
             clickSound.play();
@@ -218,7 +235,7 @@
                 points = 0;
                 pointsPerClick = 1;
                 rebirths += 1;
-                rebirthCost = Math.floor(rebirthCost * 1.5);
+                rebirthCost = Math.floor(rebirthCost * 1.5); // Increase the rebirth cost by 1.5x
                 rebirthSound.currentTime = 0;
                 rebirthSound.play();
                 updateUI();
@@ -229,13 +246,19 @@
             const newImageURL = prompt('Enter the URL of the new image:');
             if (newImageURL) {
                 clickableImage.src = newImageURL;
+                clickableImage.style.maxWidth = '300px'; // Ensure resized width
+                clickableImage.style.maxHeight = '300px'; // Ensure resized height
                 points -= 1000;
+                localStorage.setItem('customImage', newImageURL); // Save the image URL
                 updateUI();
             }
         }
 
         function resetTexture() {
             clickableImage.src = defaultImage;
+            clickableImage.style.maxWidth = '300px'; // Reset to standard size
+            clickableImage.style.maxHeight = '300px'; // Reset to standard size
+            localStorage.removeItem('customImage'); // Remove the custom image
             updateUI();
         }
 
