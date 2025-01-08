@@ -212,7 +212,7 @@
 
         function earnPoints() {
             // Calculate points with the rebirth multiplier
-            const rebirthMultiplier = 1 + (rebirths * 2);
+            const rebirthMultiplier = 1 + (rebirths * 2); // Apply multiplier
             points += pointsPerClick * rebirthMultiplier;
             clickSound.currentTime = 0;
             clickSound.play();
@@ -282,4 +282,3 @@
     </script>
 </body>
 </html>
-
