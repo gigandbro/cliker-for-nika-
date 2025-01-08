@@ -128,6 +128,7 @@
         <div class="texture-change">
             <h3>Change Texture</h3>
             <button onclick="changeTexture()" id="texture-btn" disabled>Change Texture (Requires 1000 Points)</button>
+            <button onclick="resetTexture()" id="reset-btn" disabled>Reset to Default Texture</button>
         </div>
 
         <div class="music-controls">
@@ -174,6 +175,15 @@
         const volumeSlider = document.getElementById('volume-slider');
         const clickableImage = document.getElementById('clickable-image');
         const textureBtn = document.getElementById('texture-btn');
+        const resetBtn = document.getElementById('reset-btn');
+
+        const defaultImage = 'https://cdn.discordapp.com/attachments/700786927867265145/1326628880403927100/Untitled64_20230625221019.png?ex=67801eec&is=677ecd6c&hm=a3684c93021d85e06298f98b67892fcaa4362a3f8d34b1bfd8a85db7bfa91cd3&';
+
+        // Load the custom image from localStorage
+        const savedImage = localStorage.getItem('customImage');
+        if (savedImage) {
+            clickableImage.src = savedImage;
+        }
 
         function updateUI() {
             // Calculate the rebirth multiplier
@@ -187,6 +197,7 @@
             document.getElementById('upgrade-cost').innerText = upgradeCost;
             document.getElementById('rebirth-btn').disabled = points < 1000;
             textureBtn.disabled = points < 1000;
+            resetBtn.disabled = !savedImage;
 
             // Save the state to localStorage
             localStorage.setItem('points', points);
@@ -233,8 +244,15 @@
                 clickableImage.style.maxWidth = '300px';
                 clickableImage.style.maxHeight = '300px';
                 points -= 1000;
+                localStorage.setItem('customImage', newImageURL); // Save the image URL
                 updateUI();
             }
+        }
+
+        function resetTexture() {
+            clickableImage.src = defaultImage;
+            localStorage.removeItem('customImage'); // Remove the custom image
+            updateUI();
         }
 
         function toggleMusic() {
