@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,7 +68,7 @@
 <body>
     <div class="container">
         <h1>Clicker Game</h1>
-        <img id="clickable-image" src="https://via.placeholder.com/300" alt="Clickable Image" onclick="earnPoints()">
+        <img id="clickable-image" src="https://cdn.discordapp.com/attachments/700786927867265145/1326628880403927100/Untitled64_20230625221019.png" alt="Clickable Image" onclick="earnPoints()">
         <div class="stats">
             <p><strong>Points:</strong> <span id="points">0</span></p>
             <p><strong>Points Per Click:</strong> <span id="ppc">1</span></p>
@@ -100,7 +99,7 @@
         let rebirths = localStorage.getItem('rebirths') ? parseInt(localStorage.getItem('rebirths')) : 0;
         let rebirthCost = localStorage.getItem('rebirthCost') ? parseInt(localStorage.getItem('rebirthCost')) : 1000;
         let upgradeCost = localStorage.getItem('upgradeCost') ? parseInt(localStorage.getItem('upgradeCost')) : 10;
-        let imageUrl = localStorage.getItem('imageUrl') || "https://via.placeholder.com/300";
+        let imageUrl = localStorage.getItem('imageUrl') || "https://cdn.discordapp.com/attachments/700786927867265145/1326628880403927100/Untitled64_20230625221019.png";
 
         function updateUI() {
             const rebirthMultiplier = Math.pow(2, rebirths);
@@ -139,7 +138,7 @@
             if (points >= rebirthCost) {
                 rebirths += 1;
                 points = 0;
-                rebirthCost = Math.floor(rebirthCost * 1.5);
+                rebirthCost = Math.floor(rebirthCost * 2);
                 updateUI();
             }
         }
@@ -156,7 +155,7 @@
         }
 
         function resetImage() {
-            imageUrl = "https://via.placeholder.com/300";
+            imageUrl = "https://cdn.discordapp.com/attachments/700786927867265145/1326628880403927100/Untitled64_20230625221019.png";
             updateUI();
         }
 
